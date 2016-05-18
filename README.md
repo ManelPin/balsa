@@ -25,7 +25,7 @@ The files object has the following attributes available:
 
 Templates can be used to give a file scaffolded contents. The syntax for replacements is simple:
 
-```!html
+```html
 <html>
     <body>
         <h1>{{ myHeader }}</h1>
@@ -55,7 +55,7 @@ creating the file `location.txt`.
 ## <a name="usage"></a>Usage
 
 ### Asking Questions
-```!javascript
+```javascript
 'use strict';
 
 const balsa = require('balsa');
@@ -117,7 +117,7 @@ callback function gets an `answers` array back and each answer uses the followin
 
 An example of usage would be:
 
-```!javascript
+```javascript
 'use strict';
 
 const ask = require('balsa/libs/ask');

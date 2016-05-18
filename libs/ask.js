@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const ask = require('./ask');
+const ask = require('./libs/ask');
 
 const rootDir = path.resolve(__dirname, '..', '..');
 

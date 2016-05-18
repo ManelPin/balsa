@@ -1,0 +1,25 @@
+{
+  "name": "balsa",
+  "version": "0.0.1",
+  "description": "A lightweight scaffolding tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gonzofish/balsa.git"
+  },
+  "keywords": [
+    "scaffold",
+    "scaffolding",
+    "setup",
+    "javascript"
+  ],
+  "author": "Matt Fehskens <matt.fehskens@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gonzofish/balsa/issues"
+  },
+  "homepage": "https://github.com/gonzofish/balsa#readme"
+}

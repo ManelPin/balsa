@@ -1,62 +1,61 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const ask = require('./libs/ask');
+const readline = require('readline');
 
-const rootDir = path.resolve(__dirname, '..', '..');
-
-const askQuestions = (questions, files) => {
-    ask(questions, answers => {
-        process(answers, files);
+const ask = (questions, callback) => {
+    const reader = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     });
+
+    askQuestions(questions, [], reader, callback);
 };
 
-const process = (answers, files) => {
-    files.forEach(file => {
-        const destination = performReplacements(file.destination, answers);
+const askQuestions = (questions, answers, reader, callback) => {
+    const question = questions[0];
+    const remainingQuestions = questions.slice(1);
 
-        ensureDirs(destination);
-
-        if (!fs.existsSync(destination)) {
-            const output = performReplacements(file.template, answers);
-            fs.writeFile(destination, output, { encoding: 'utf8' });
-        }
-    });
+    if (question.question) {
+        reader.question(question.question.trim() + ' ', answer => {
+            if (!!answer) {
+                answers.push({ name: question.name, answer: answer });
+                askNextQuestion(remainingQuestions, answers, reader, callback);
+            } else {
+                askQuestions(questions, answers);
+            }
+        });
+    } else if (question.useAnswer) {
+        answers.push(deriveAnswer(question, answers));
+        askNextQuestion(remainingQuestions, answers, reader, callback);
+    }
 };
 
-const ensureDirs = filePath => {
-    const paths = filePath.replace(rootDir, '').split(path.sep).slice(1, -1);
+const deriveAnswer = (question, answers) => {
+    const answerToUse = answers.filter(answer => answer.name === question.useAnswer);
+    let answer = { name: question.name, answer: '' };
 
-    paths.reduce((previousPath, directory) => {
-        const currentPath = path.resolve(previousPath, directory);
-
-        if (!fs.existsSync(currentPath)) {
-            fs.mkdirSync(currentPath);
-        }
-
-        return currentPath;
-    }, rootDir);
-};
-
-const performReplacements = (template, answers) => {
-    let output = '';
-
-    if (template && typeof template === 'string') {
-        output = answers.reduce(replaceAnswer, template);
+    if (answerToUse.length > 0) {
+        answer.answer = transformAnswer(answerToUse[0].answer, question.transform);
     }
 
-    return output;
+    return answer;
 };
 
-const replaceAnswer = (template, answer) => {
-    const regex = new RegExp(`\\{\\{\\s*${answer.name}\\s*\\}\\}`, 'g');
-    const newTemplate = template.replace(regex, answer.answer);
+const transformAnswer = (value, transform) => {
+    if (typeof transform === 'function') {
+        value = transform(value);
+    }
 
-    return newTemplate;
+    return value;
 };
 
-module.exports = {
-    ask: askQuestions,
-    process: process
+const askNextQuestion = (remainingQuestions, answers, reader, callback) => {
+    if (remainingQuestions.length > 0) {
+        askQuestions(remainingQuestions, answers, reader, callback);
+    } else {
+        reader.close();
+        callback(answers);
+    }
 };
+
+module.exports = ask;

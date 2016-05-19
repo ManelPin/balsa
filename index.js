@@ -4,15 +4,15 @@ const fs = require('fs');
 const path = require('path');
 const ask = require('./libs/ask');
 
-const rootDir = path.resolve(__dirname, '..', '..');
+const rootDir = process.cwd();
 
 const askQuestions = (questions, files) => {
     ask(questions, answers => {
-        process(answers, files);
+        processAnswers(answers, files);
     });
 };
 
-const process = (answers, files) => {
+const processAnswers = (answers, files) => {
     files.forEach(file => {
         const destination = performReplacements(file.destination, answers);
 
@@ -58,5 +58,5 @@ const replaceAnswer = (template, answer) => {
 
 module.exports = {
     ask: askQuestions,
-    process: process
+    process: processAnswers
 };

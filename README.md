@@ -8,6 +8,7 @@ A light-weight scaffolding tool. Gives you just the basics. The API is broken in
 
 The question structure has the following attributes available:
 
+- `allowBlank`: if truthy, will allow blank answers
 - `name` (_required_): an ID, unique to the set of questions
 - `question`: the string prompt to show the user
 - `transform`: a function to transform the user's input

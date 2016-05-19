@@ -17,17 +17,41 @@ const askQuestions = (questions, answers, reader, callback) => {
 
     if (question.question) {
         reader.question(question.question.trim() + ' ', answer => {
-            if (!!answer) {
+            answer = transformAnswer(answer, question.transform);
+
+            if (checkAnswerValid(answer, question.allowBlank)) {
                 answers.push({ name: question.name, answer: answer });
                 askNextQuestion(remainingQuestions, answers, reader, callback);
             } else {
-                askQuestions(questions, answers);
+                askQuestions(questions, answers, reader, callback);
             }
         });
     } else if (question.useAnswer) {
         answers.push(deriveAnswer(question, answers));
         askNextQuestion(remainingQuestions, answers, reader, callback);
     }
+};
+
+const checkAnswerValid = (answer, allowBlank) => {
+    let valid = true;
+
+    switch (getValueType(answer)) {
+        case 'string':
+            valid = !!answer || !!allowBlank;
+            break;
+        case 'null':
+        case 'undefined':
+            valid = false;
+            break;
+    }
+
+    return valid;
+};
+
+const getValueType = value => {
+    return Object.prototype.toString.call(value)
+            .replace(/\[object |\]/g, '')
+            .toLowerCase();
 };
 
 const deriveAnswer = (question, answers) => {

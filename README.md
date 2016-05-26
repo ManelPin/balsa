@@ -20,7 +20,8 @@ these questions are at the end of the list of questions!**
 The files object has the following attributes available:
 
 - `destination` (_required_): the file path to create
-- `template`: the string to do replacements on; if this is omitted, a blank file will be created.
+- `template`: the string to do replacements on; if this is omitted, a blank file will be created. This can also be a
+file path to a template; if it is, the file will be read and used for replacements.
 
 ## Templates
 
@@ -45,9 +46,10 @@ Pulling in Balsa provides you with an object of methods. They are:
 
 - `ask(questions, files)`: Ask the array of `questions` and create the files in the `files` array, performing
 any necessary replacements.
-- `process(answers, files)`: Process an array of `answers` and create the files in the `files` array,
+- `process(answers, files, overwrite)`: Process an array of `answers` and create the files in the `files` array,
 performing any necessary replacements. The `ask` method uses this to process its answered questions.
-The `answers` follows the same structure as the [answers](#answers) returned by the [`ask` helper](#ask).
+The `answers` follows the same structure as the [answers](#answers) returned by the [`ask` helper](#ask). The last
+argument (`overwrite`) will overwrite any existing files.
 
 When files are created, Balsa will create any directories it needs to create. So if you give it a destination of
 `this/is/my/file/path/location.txt` it will create every directory (`this`, `is`, `my`, `file`, `path`) before

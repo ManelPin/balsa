@@ -12,14 +12,14 @@ const askQuestions = (questions, files) => {
     });
 };
 
-const processAnswers = (answers, files) => {
+const processAnswers = (answers, files, overwrite) => {
     files.forEach(file => {
         const destination = performReplacements(file.destination, answers);
 
         ensureDirs(destination);
 
-        if (!fs.existsSync(destination)) {
-            const output = performReplacements(file.template, answers);
+        if (!fs.existsSync(destination) || overwrite) {
+            const output = performReplacements(file.template, answers, true);
             fs.writeFile(destination, output, { encoding: 'utf8' });
         }
     });
@@ -39,14 +39,23 @@ const ensureDirs = filePath => {
     }, rootDir);
 };
 
-const performReplacements = (template, answers) => {
+const performReplacements = (template, answers, checkIsFile) => {
     let output = '';
 
     if (template && typeof template === 'string') {
+        template = getTemplate(template, checkIsFile);
         output = answers.reduce(replaceAnswer, template);
     }
 
     return output;
+};
+
+const getTemplate = (template, checkIsFile) => {
+    if (checkIsFile && fs.existsSync(template)) {
+        template = fs.readFileSync(template, 'utf8');
+    }
+
+    return template;
 };
 
 const replaceAnswer = (template, answer) => {

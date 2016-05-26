@@ -28,6 +28,7 @@ const convertYesNo = value => {
 };
 const files = [
     { destination: __dirname + '/outputs/questions/animal-story.txt', template: 'My favorite food is {{ food }} (id: {{ foodId }}){{ yesNo }}' },
+    { destination: __dirname + '/outputs/questions/from-template.txt', template: __dirname + '/template.txt' },
     { destination: __dirname + '/outputs/questions/sub/blank-file' }
 ];
 const questions = [

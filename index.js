@@ -6,9 +6,10 @@ const ask = require('./libs/ask');
 
 const rootDir = process.cwd();
 
-const askQuestions = (questions, files) => {
+const askQuestions = (questions, files, callback) => {
     ask(questions, answers => {
         processAnswers(answers, files);
+        callback(answers);
     });
 };
 

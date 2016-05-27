@@ -11,7 +11,8 @@ The question structure has the following attributes available:
 - `allowBlank`: if truthy, will allow blank answers
 - `name` (_required_): an ID, unique to the set of questions
 - `question`: the string prompt to show the user
-- `transform`: a function to transform the user's input
+- `transform`: a function to transform the user's input; method signature is `transformMethod(value, allAnswers)`
+where `allAnswers` is the array of answers up until that point.
 - `useAnswer`: if a question is not provided, this can be provided to use another question's answer. **Make sure
 these questions are at the end of the list of questions!**
 
@@ -19,6 +20,7 @@ these questions are at the end of the list of questions!**
 
 The files object has the following attributes available:
 
+- `check`: a function to see if the file should be created; if omitted or not a Function, it defaults to true.
 - `destination` (_required_): the file path to create
 - `template`: the string to do replacements on; if this is omitted, a blank file will be created. This can also be a
 file path to a template; if it is, the file will be read and used for replacements.

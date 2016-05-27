@@ -14,16 +14,32 @@ const askQuestions = (questions, files) => {
 
 const processAnswers = (answers, files, overwrite) => {
     files.forEach(file => {
-        const destination = performReplacements(file.destination, answers);
+        const createFile = checkCreateFile(file, answers);
+        let destination;
 
-        ensureDirs(destination);
+        if (createFile) {
+            destination = performReplacements(file.destination, answers);
 
-        if (!fs.existsSync(destination) || overwrite) {
-            const output = performReplacements(file.template, answers, true);
-            fs.writeFile(destination, output, { encoding: 'utf8' });
+            ensureDirs(destination);
+
+            if (!fs.existsSync(destination) || overwrite) {
+                const output = performReplacements(file.template, answers, true);
+                fs.writeFile(destination, output, { encoding: 'utf8' });
+            }
         }
     });
 };
+
+const checkCreateFile = (file, answers) => {
+    let createFile = true;
+
+    if (typeof file.check === 'function') {
+        createFile = file.check(answers);
+    }
+
+    return createFile;
+};
+
 
 const ensureDirs = filePath => {
     const paths = filePath.replace(rootDir, '').split(path.sep).slice(1, -1);

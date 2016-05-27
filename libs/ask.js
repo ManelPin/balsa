@@ -17,7 +17,7 @@ const askQuestions = (questions, answers, reader, callback) => {
 
     if (question.question) {
         reader.question(question.question.trim() + ' ', answer => {
-            answer = transformAnswer(answer, question.transform);
+            answer = transformAnswer(answer, question.transform, answers);
 
             if (checkAnswerValid(answer, question.allowBlank)) {
                 answers.push({ name: question.name, answer: answer });
@@ -59,15 +59,15 @@ const deriveAnswer = (question, answers) => {
     let answer = { name: question.name, answer: '' };
 
     if (answerToUse.length > 0) {
-        answer.answer = transformAnswer(answerToUse[0].answer, question.transform);
+        answer.answer = transformAnswer(answerToUse[0].answer, question.transform, answers);
     }
 
     return answer;
 };
 
-const transformAnswer = (value, transform) => {
+const transformAnswer = (value, transform, allAnswers) => {
     if (typeof transform === 'function') {
-        value = transform(value);
+        value = transform(value, allAnswers);
     }
 
     return value;

@@ -9,7 +9,9 @@ const rootDir = process.cwd();
 const askQuestions = (questions, files, callback) => {
     ask(questions, answers => {
         processAnswers(answers, files);
-        callback(answers);
+        if (typeof callback === 'function') {
+            callback(answers);
+        }
     });
 };
 

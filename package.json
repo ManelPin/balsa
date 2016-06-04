@@ -1,6 +1,6 @@
 {
   "name": "balsa",
-  "version": "0.0.2",
+  "version": "0.0.7",
   "description": "A lightweight scaffolding tool.",
   "main": "index.js",
   "scripts": {
